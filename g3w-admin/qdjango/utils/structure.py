@@ -16,7 +16,7 @@ from urlparse import urlsplit, parse_qs
 from core.utils.projects import CoreMetaLayer
 from core.utils import unicode2ascii
 from .exceptions import QgisProjectLayerException
-
+import requests
 
 # "schema"."table"
 RE1 = re.compile(r'"([^"]+)"\."([^"]+)"')
@@ -146,6 +146,10 @@ class QgisLayerStructure(object):
 
 
 class QgisOGRLayerStructure(QgisLayerStructure):
+    """
+    Get OGR layer type columns structure.
+    For shapefile ond other file types ogr supported.
+    """
 
     def __init__(self, layer, **kwargs):
         super(QgisOGRLayerStructure, self).__init__(layer, **kwargs)
@@ -180,6 +184,37 @@ class QgisOGRLayerStructure(QgisLayerStructure):
             })
 
         dataSourceOgr.Destroy()
+
+
+class QgisAFSLayerStructure(QgisLayerStructure):
+    """
+    Get ArcGisFeatureServer layer type columns structure.
+    """
+    #todo:: to study better
+
+    def __init__(self, layer, **kwargs):
+        super(QgisAFSLayerStructure, self).__init__(layer, **kwargs)
+
+        # get table columns
+        self.getTableColumns()
+
+    def getTableColumns(self):
+        """
+        Get table column info
+        """
+        capabilitiesAfs = requests.get('{}?f=json'.format(datasourcearcgis2dict(self.datasource)['url']))
+
+        if capabilitiesAfs.status_code == 200:
+            res = capabilitiesAfs.json()
+            if 'fields' in res:
+                for f in res['fields']:
+                    self.columns.append({
+                        'name': f['name'],
+                        'type': f['type'].upper(),
+                        'label': f['alias']
+                    })
+
+        del(capabilitiesAfs)
 
 
 class QgisDBLayerStructure(QgisLayerStructure):

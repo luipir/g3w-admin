@@ -359,7 +359,14 @@ class QgisProjectLayer(XmlData):
             layerStructure = QgisOGRLayerStructure(self)
         elif self.layerType in [Layer.TYPES.delimitedtext]:
             layerStructure = QgisCSVLayerStructure(self)
-        elif self.layerType in [Layer.TYPES.wms, Layer.TYPES.gdal, Layer.TYPES.arcgismapserver]:
+        elif self.layerType in [Layer.TYPES.arcgisfeatureserver]:
+            layerStructure = QgisAFSLayerStructure(self)
+        elif self.layerType in [
+            Layer.TYPES.wms,
+            Layer.TYPES.gdal,
+            Layer.TYPES.arcgismapserver,
+            Layer.TYPES.arcgisfeatureserver
+        ]:
             return None
 
 
