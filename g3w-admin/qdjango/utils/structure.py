@@ -69,6 +69,24 @@ def datasource2dict(datasource):
     return datasourceDict
 
 
+def datasourcearcgis2dict(datasource):
+    """
+    Read a ArcGisMapServer datasource string and put data in a python dict
+    """
+
+    datasourcedict = {}
+
+    keys = re.findall(r'([A-z][A-z0-9-_]+)=[\'"]?[#$^?+=!*()\'-/@%&\w\."]+[\'"]?', datasource)
+    for k in keys:
+        try:
+            datasourcedict[k] = re.findall(r'%s=([^"\'][#$:\?\/%&\w\.]+[$"\'])' % k, datasource)[0]
+        except:
+            # If I reincarnate as a human, I'll choose to be a farmer.
+            datasourcedict[k] = re.findall(r'%s=((?:["\'](?:(?:[^\"\']|\\\')+)["\'])(?:\.["\'](?:(?:[^\"\']|\\\')+)["\'])?)\s' % k, datasource)[0].strip('\'')
+
+    return datasourcedict
+
+
 class QdjangoMetaLayer(CoreMetaLayer):
 
     layerTypesSingleLayer = (

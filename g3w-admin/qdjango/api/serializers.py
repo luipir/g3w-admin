@@ -20,7 +20,7 @@ from core.api.serializers import update_serializer_data, G3WSerializerMixin
 from core.utils.models import get_geometry_column, create_geomodel_from_qdjango_layer
 from core.utils.structure import RELATIONS_ONE_TO_MANY, RELATIONS_ONE_TO_ONE
 from core.models import G3WSpatialRefSys
-from qdjango.utils.structure import QdjangoMetaLayer
+from qdjango.utils.structure import QdjangoMetaLayer, datasourcearcgis2dict
 from .utils import serialize_vectorjoin
 import json
 
@@ -403,9 +403,12 @@ class LayerSerializer(serializers.ModelSerializer):
         }
 
         # add options for wms layer
-        if instance.layer_type == 'wms':
+        if instance.layer_type in [Layer.TYPES.wms, Layer.TYPES.arcgismapserver]:
 
-            datasourceWMS = QueryDict(bytes(instance.datasource))
+            if instance.layer_type == Layer.TYPES.wms:
+                datasourceWMS = QueryDict(bytes(instance.datasource))
+            else:
+                datasourceWMS = datasourcearcgis2dict(instance.datasource)
             if ('username' not in ret['source'] or 'password' not in ret['source']) and 'type=xyz' not in instance.datasource:
                 ret['source'].update(datasourceWMS.dict())
                 ret['source']['external'] = True
