@@ -79,10 +79,9 @@ def datasourcearcgis2dict(datasource):
     keys = re.findall(r'([A-z][A-z0-9-_]+)=[\'"]?[#$^?+=!*()\'-/@%&\w\."]+[\'"]?', datasource)
     for k in keys:
         try:
-            datasourcedict[k] = re.findall(r'%s=([^"\'][#$:\?\/%&\w\.]+[$"\'])' % k, datasource)[0]
+            datasourcedict[k] = re.findall(r'{}=[\'"]([#$:_^?+=!*()\'-/@%&\w\."]+)[\'"]'.format(k), datasource)[0]
         except:
-            # If I reincarnate as a human, I'll choose to be a farmer.
-            datasourcedict[k] = re.findall(r'%s=((?:["\'](?:(?:[^\"\']|\\\')+)["\'])(?:\.["\'](?:(?:[^\"\']|\\\')+)["\'])?)\s' % k, datasource)[0].strip('\'')
+            pass
 
     return datasourcedict
 

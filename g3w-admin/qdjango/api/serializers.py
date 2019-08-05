@@ -409,8 +409,9 @@ class LayerSerializer(serializers.ModelSerializer):
                 datasourceWMS = QueryDict(bytes(instance.datasource))
             else:
                 datasourceWMS = datasourcearcgis2dict(instance.datasource)
+
             if ('username' not in ret['source'] or 'password' not in ret['source']) and 'type=xyz' not in instance.datasource:
-                ret['source'].update(datasourceWMS.dict())
+                ret['source'].update(datasourceWMS.dict() if isinstance(datasourceWMS, QueryDict) else datasourceWMS)
                 ret['source']['external'] = True
                 #ret['servertype'] = MSTYPES_OGC
 
