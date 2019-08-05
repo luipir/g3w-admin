@@ -364,8 +364,7 @@ class QgisProjectLayer(XmlData):
         elif self.layerType in [
             Layer.TYPES.wms,
             Layer.TYPES.gdal,
-            Layer.TYPES.arcgismapserver,
-            Layer.TYPES.arcgisfeatureserver
+            Layer.TYPES.arcgismapserver
         ]:
             return None
 
