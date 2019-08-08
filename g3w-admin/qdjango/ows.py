@@ -131,19 +131,22 @@ class OWSRequestHandler(OWSRequestHandlerBase):
         if qdjangoModeRequest == QDJANGO_PROXY_REQUEST or ows_request == 'GETLEGENDGRAPHIC':
 
             # try to get getfeatureinfo on wms layer
-            if ows_request == 'GETFEATUREINFO' and 'SOURCE' in q and q['SOURCE'].upper() == 'WMS':
+            if ows_request == 'GETFEATUREINFO' and 'SOURCE' in q and q['SOURCE'].upper() in ('WMS', 'ARCGISMAPSERVER'):
 
                 # get layer by name
                 layers_to_filter = q['QUERY_LAYER'] if 'QUERY_LAYER' in q else q['QUERY_LAYERS'].split(',')
 
-                # get layers to query
-                layers_to_query = []
-                for ltf in layers_to_filter:
-                    layer = cls._projectInstance.layer_set.filter(Q(name=ltf) | Q(origname=ltf))[0]
-                    layer_source = QueryDict(layer.datasource)
-                    layers_to_query.append(layer_source['layers'])
+                # get layers to query for WMS
+                if q['SOURCE'].upper() == 'WMS':
+                    layers_to_query = []
+                    for ltf in layers_to_filter:
+                        layer = cls._projectInstance.layer_set.filter(Q(name=ltf) | Q(origname=ltf))[0]
+                        layer_source = QueryDict(layer.datasource)
+                        layers_to_query.append(layer_source['layers'])
 
-                layers_to_query = ','.join(layers_to_query)
+                    layers_to_query = ','.join(layers_to_query)
+                else:
+                    layers_to_query = ','.join(layers_to_filter)
 
                 # get ogc server url
                 layer_source = QueryDict(layer.datasource)
