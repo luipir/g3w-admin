@@ -347,7 +347,7 @@ class LayerVectorView(QGISLayerVectorViewMixin, BaseVectorOnModelApiView):
         zip_filename = "{}.zip".format(filename)
 
         # Open StringIO to grab in-memory ZIP contents
-        s = io.StringIO()
+        s = io.BytesIO()
 
         # The zip compressor
         zf = zipfile.ZipFile(s, "w")
