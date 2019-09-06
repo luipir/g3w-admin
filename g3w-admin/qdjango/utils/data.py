@@ -1384,7 +1384,7 @@ class QgisProjectSettingsWMS(XmlData):
                 'maps': _composerMaps
             })
 
-        return self._composerTElememplatesData
+        return self._composerTemplatesData
 
 
 class QgisPgConnection(object):
