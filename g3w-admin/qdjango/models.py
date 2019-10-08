@@ -107,7 +107,7 @@ class Project(G3WProjectMixins, G3WACLModelMixins, TimeStampedModel):
             ('view_project', 'Can view qdjango project'),
         )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def _permissionsToEditor(self, user, mode='add'):
@@ -327,7 +327,7 @@ class Layer(G3WACLModelMixins, models.Model):
 
     download = models.BooleanField(_('Download data'), default=False, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -393,7 +393,7 @@ class Widget(G3WACLModelMixins, models.Model):
     )
     layers = models.ManyToManyField(Layer)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
