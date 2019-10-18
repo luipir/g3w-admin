@@ -1053,8 +1053,7 @@ class QgisProject(XmlData):
                     layoutitem.attrib['file'] = makeComposerPictureFile(layoutitem.attrib['file'])
 
         # Update QGIS file
-        with open(self.instance.qgis_file.path, 'w') as handler:
-            tree.write(handler.name)
+        tree.write(self.instance.qgis_file.path, encoding='UTF-8')
 
 
 class QgisProjectSettingsWMS(XmlData):
