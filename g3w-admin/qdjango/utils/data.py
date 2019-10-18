@@ -1054,7 +1054,7 @@ class QgisProject(XmlData):
 
         # Update QGIS file
         with open(self.instance.qgis_file.path, 'w') as handler:
-            tree.write(handler)
+            tree.write(handler.name)
 
 
 class QgisProjectSettingsWMS(XmlData):
@@ -1085,7 +1085,7 @@ class QgisProjectSettingsWMS(XmlData):
         :return:
         """
         try:
-            self.qgisProjectSettingsTree = lxml.fromstring(self.qgisProjectSettingsFile.encode('UTF-8'))
+            self.qgisProjectSettingsTree = lxml.fromstring(self.qgisProjectSettingsFile)
         except Exception as e:
             raise Exception(
                 _('The project settings is malformed: {} ----- {}'.format(e.args[0], self.qgisProjectSettingsFile)))
